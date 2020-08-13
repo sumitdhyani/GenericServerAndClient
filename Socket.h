@@ -13,11 +13,14 @@ namespace ULSocketUtils
 		int m_filehandle;
 		size_t m_maxReadSize;
 		size_t m_maxWriteSize;
+		bool m_socketClosed;
+
 	public:
 		BlockingSocket(int filehandle, size_t maxReadSize, size_t maxWriteSize) :
 			m_filehandle(filehandle),
 			m_maxReadSize(maxReadSize),
-			m_maxWriteSize(maxWriteSize)
+			m_maxWriteSize(maxWriteSize),
+			m_socketClosed(false)
 		{
 		}
 
@@ -42,6 +45,18 @@ namespace ULSocketUtils
 			if (0 >= numWritten)
 				throw SocketClosedException();
 		}
+
+		virtual void close()
+		{
+			::closesocket(m_filehandle);
+			m_socketClosed = true;
+		}
+
+		~BlockingSocket()
+		{
+			if (!m_socketClosed)
+				close();
+		}
 	};
 
 	class NonBlockingSocket : INonBlockingSocket
@@ -51,11 +66,13 @@ namespace ULSocketUtils
 		size_t m_readHead;
 		size_t m_maxReadSize;
 		size_t m_maxWriteSize;
+		bool m_socketClosed;
 	public:
 		NonBlockingSocket(int filehandle, size_t maxReadSize, size_t maxWriteSize) :
 			m_filehandle(filehandle),
 			m_maxReadSize(maxReadSize),
-			m_maxWriteSize(maxWriteSize)
+			m_maxWriteSize(maxWriteSize),
+			m_socketClosed(false)
 		{
 			m_readBuffer = new BYTE[maxReadSize];
 			m_readHead = 0;
@@ -96,6 +113,8 @@ namespace ULSocketUtils
 
 		~NonBlockingSocket()
 		{
+			if (!m_socketClosed)
+				close();
 			delete[] m_readBuffer;
 		}
 	};

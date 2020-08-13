@@ -6,7 +6,7 @@ struct IServerActivityListener
 {
 	virtual void start() = 0;
 
-	void ~IServerActivityListener() {}
+	virtual ~IServerActivityListener() {}
 };
 
 using IClientActivityListener = IServerActivityListener;

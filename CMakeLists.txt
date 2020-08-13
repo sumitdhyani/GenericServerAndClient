@@ -22,7 +22,7 @@ endif()
 
 if("${CMAKE_CURRENT_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
 	add_subdirectory(CommonUtils)	
-	add_subdirectory(MTTools)	
+	add_subdirectory(MTTools)
 endif()
 
 project(GenericServerAndClient)

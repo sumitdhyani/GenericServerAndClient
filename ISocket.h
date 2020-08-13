@@ -15,6 +15,8 @@ namespace ULSocketUtils
 
 		virtual void write(const BYTE* data, size_t len) = 0;
 
+		virtual void close() = 0;
+
 		virtual ~IBlockingSocket() {}
 	};
 	DEFINE_UNIQUE_PTR(IBlockingSocket)
@@ -25,6 +27,8 @@ namespace ULSocketUtils
 		virtual void read(size_t numBytes, BYTE* out) = 0;
 
 		virtual void write(const BYTE* data, size_t len) = 0;
+
+		virtual void close() = 0;
 
 		virtual ~INonBlockingSocket() {}
 	};
