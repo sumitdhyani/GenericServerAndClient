@@ -20,10 +20,10 @@ if("${CMAKE_CURRENT_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
 	add_subdirectory(CommonUtils)	
 endif()
 
-set (ALL_SOURCES "IClientInterface.hpp" "ICommunicationHandler.hpp" "IConnectionInterface.hpp" "IMessage.hpp" "IServerInterface.hpp")
+set (ALL_SOURCES IClientInterface.hpp ICommunicationHandler.hpp IConnectionInterface.hpp IMessage.hpp IServerInterface.hpp)
 
 project(GenericServerAndClient)
-add_library("${PROJECT_NAME}" STATIC  ${ALL_SOURCES})
+add_library("${PROJECT_NAME}" STATIC  "${ALL_SOURCES}")
 add_dependencies("${PROJECT_NAME}" CommonUtils)
 #Needed for quaified paths, for protejects which have external dependencies
 target_include_directories("${PROJECT_NAME}" PUBLIC "${CMAKE_SOURCE_DIR}")
