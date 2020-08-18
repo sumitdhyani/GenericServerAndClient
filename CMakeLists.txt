@@ -27,3 +27,4 @@ add_library("${PROJECT_NAME}" STATIC  ${ALL_SOURCES})
 add_dependencies("${PROJECT_NAME}" CommonUtils)
 #Needed for quaified paths, for protejects which have external dependencies
 target_include_directories("${PROJECT_NAME}" PUBLIC "${CMAKE_SOURCE_DIR}")
+set_target_properties("${PROJECT_NAME}" PROPERTIES LINKER_LANGUAGE CXX)
