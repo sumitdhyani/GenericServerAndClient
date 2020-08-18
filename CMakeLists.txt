@@ -12,23 +12,18 @@ if("${CMAKE_CURRENT_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
 	endif()
 endif()
 
-if(NOT TARGET MTTools)
-	execute_process(COMMAND git clone https://github.com/sumitdhyani/MTTools.git "${CMAKE_SOURCE_DIR}/MTTools")
-endif()
-
 if(NOT TARGET CommonUtils)
 	execute_process(COMMAND git clone https://github.com/sumitdhyani/CommonUtils.git "${CMAKE_SOURCE_DIR}/CommonUtils")
 endif()
 
 if("${CMAKE_CURRENT_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
 	add_subdirectory(CommonUtils)	
-	add_subdirectory(MTTools)
 endif()
 
 set (ALL_SOURCES IClientInterface.hpp ICommunicationHandler.hpp IConnectionInterface.hpp IMessage.hpp IServerInterface.hpp)
 
 project(GenericServerAndClient)
 add_library("${PROJECT_NAME}" STATIC  "${ALL_SOURCES}")
-add_dependencies("${PROJECT_NAME}" MTTools CommonUtils)
+add_dependencies("${PROJECT_NAME}" CommonUtils)
 #Needed for quaified paths, for protejects which have external dependencies
 target_include_directories("${PROJECT_NAME}" PUBLIC "${CMAKE_SOURCE_DIR}")
