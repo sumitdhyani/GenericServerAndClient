@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include <functional>
-#include "IConnectionInterface.h"
+#include "IConnectionInterface.hpp"
 
 namespace ULCommunicationFramework
 {

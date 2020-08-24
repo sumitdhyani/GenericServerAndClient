@@ -1,5 +1,5 @@
 #pragma once
-#include "IConnectionInterface.h"
+#include "IConnectionInterface.hpp"
 
 namespace ULCommunicationFramework
 {
