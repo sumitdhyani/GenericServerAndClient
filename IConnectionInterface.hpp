@@ -18,7 +18,7 @@ namespace ULCommunicationFramework
 	template <class MsgObjType>
 	struct IMsgPropagator
 	{
-		virtual void send(SendMsgObjType, std::function<void(bool)>) = 0;
+		virtual void send(MsgObjType, std::function<void(bool)>) = 0;
 	};
 
 
