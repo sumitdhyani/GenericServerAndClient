@@ -4,7 +4,7 @@
 
 namespace ULCommunicationFramework
 {
-	enum ConnectionEvent
+	enum class ConnectionEvent
 	{
 		Started,
 		Stopped,
@@ -15,36 +15,25 @@ namespace ULCommunicationFramework
 	};
 
 
-	template <class MsgObjType>
+	template <class MsgObjType, class ExceptionType>
 	struct IMsgPropagator
 	{
-		virtual void send(MsgObjType, std::function<void(bool)>) = 0;
+		virtual void send(MsgObjType, std::function<void(const ExceptionType&)>) = 0;
 	};
 
-
-	template <class RecMsgType, class SendMsgObjType>
-	struct IActiveConnection : IMsgPropagator<SendMsgObjType>
+	template <class RecMsgObjType, class SendMsgObjType, class ExceptionType>
+	struct IConnection : IMsgPropagator<SendMsgObjType, ExceptionType>
 	{
-		virtual size_t registerAsListener(std::function<void(std::string)> msgCallback, std::function<void(size_t)> listenerIdCallback) = 0;
+		virtual void receive(std::function<void(RecMsgObjType)>, std::function<void(const ExceptionType&)>) = 0;
 
-		virtual size_t unregisterAsListener(size_t listenerId) = 0;
+		virtual void registerForConnectionEvents(std::function<void(ConnectionEvent, std::string)>, size_t, std::function<void(ExceptionType&)>) = 0;
 
-		virtual void registerForConnectionEvents(std::function<void(ConnectionEvent, std::string)>, std::function<void(size_t)>) = 0;
+		virtual void unregisterForConnectionEvents(size_t, std::function<void(const ExceptionType&)>) = 0;
 
-		virtual void unregisterForConnectionEvents(size_t) = 0;
+		virtual void kill(std::function<void(const ExceptionType&)>) = 0;
 
-		virtual void kill(std::function<void(bool, std::string)>) = 0;
+		virtual std::string desc() = 0;
 
-		virtual ~IActiveConnection() {}
-	};
-
-	template <class RecMsgObjType, class SendMsgObjType>
-	struct IPassiveConnection : IMsgPropagator<SendMsgObjType>
-	{
-		virtual RecMsgObjType receive() = 0;
-
-		virtual void kill(std::function<void(bool, std::string)>) = 0;
-
-		virtual ~IPassiveConnection() {}
+		virtual ~IConnection() {}
 	};
 }

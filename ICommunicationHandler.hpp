@@ -1,5 +1,6 @@
 #pragma once
-#include <string>
+#include <vector>
+#include "IMessage.hpp"
 #include "IConnectionInterface.hpp"
 
 namespace ULCommunicationFramework
@@ -15,42 +16,45 @@ namespace ULCommunicationFramework
 
 
 
-	template <class RecMsgObjType, class SendMsgObjType>
+	template <class MsgIdType, class RawMsgType, class RecMsgObjType, class ExceptionType>
 	struct IActiveConnectionCommunicationHandler
 	{
+		typedef IMessage<RawMsgType, ExceptionType> IMessage;
+		DEFINE_UNIQUE_PTR(IMessage)
+		DEFINE_UNIQUE_PTR(RecMsgObjType)
+
 		virtual void start() = 0;
 
-		virtual void pause() = 0;
+		virtual void kill(std::function<void(ExceptionType&)>) = 0;
 
-		virtual void resume() = 0;
+		virtual void send(IMessage_UPtr, std::function<void(const ExceptionType&)>) = 0;
 
-		virtual void kill() = 0;
+		virtual void registerForConnectionEvents(std::function<void(ConnectionEvent, std::string)>, size_t, std::function<void(ExceptionType&)>) = 0;
 
-		virtual void reset(IActiveConnection<RecMsgObjType, SendMsgObjType>) = 0;
+		virtual void unregisterForConnectionEvents(size_t, std::function<void(const ExceptionType&)>) = 0;
 
-		virtual void registerForConnectionEvents(std::function<void(ConnectionEvent, std::string)>, std::function<void(size_t)>) = 0;
+		virtual void registerForMessages(MsgIdType, std::function<void(RecMsgObjType_UPtr)>, size_t, std::function<void(ExceptionType&)>) = 0;
 
-		virtual void unregisterForConnectionEvents(size_t, std::function<void(bool, std::string)>) = 0;
+		virtual void unRegisterForMessages(size_t, std::function<void(ExceptionType&)>) = 0;
 
 		virtual ~IActiveConnectionCommunicationHandler() {}
 	};
 
-	template <class RecMsgObjType, class SendMsgObjType >
+	template <class RecMsgObjType, class SendMsgObjType, class ExceptionType>
 	struct IPassiveConnectionCommunicationHandler
 	{
-		virtual void start() = 0;
-
-		virtual void pause() = 0;
-
-		virtual void resume() = 0;
+		typedef IMessage<RecMsgObjType, ExceptionType> IMessage;
+		DEFINE_UNIQUE_PTR(IMessage)
 
 		virtual void kill() = 0;
 
-		virtual void reset(IPassiveConnection<RecMsgObjType, SendMsgObjType>) = 0;
+		virtual void send(IMessage_UPtr, std::function<void(const ExceptionType&)>) = 0;
 
-		virtual void registerForConnectionEvents(std::function<void(ConnectionEvent, std::string)>, std::function<void(size_t)>) = 0;
+		virtual void registerForConnectionEvents(std::function<void(ConnectionEvent, std::string)>, size_t, std::function<void(ExceptionType&)>) = 0;
 
-		virtual void unregisterForConnectionEvents(size_t, std::function<void(bool, std::string)>) = 0;
+		virtual void unregisterForConnectionEvents(size_t, std::function<void(const ExceptionType&)>) = 0;
+
+		virtual void receive(std::function<void(RecMsgObjType)>, std::function<void(const ExceptionType&)>) = 0;
 
 		virtual ~IPassiveConnectionCommunicationHandler() {}
 	};

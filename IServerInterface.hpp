@@ -1,32 +1,25 @@
 #pragma once
 #include <string>
 #include <functional>
+#include <CommonUtils/CommonDefs.hpp>
 #include "IConnectionInterface.hpp"
+#include "ICommunicationHandler.hpp"
 
 namespace ULCommunicationFramework
 {
-	template <class RecMsgObjType, class SendMsgObjType>
-	struct IActiveConnectionServerInterface
+	template <class MsgIdType, class RawMsgType, class RecMsgObjType, class ExceptionType>
+	struct IServerInterface
 	{
+		typedef IActiveConnectionCommunicationHandler<MsgIdType, RawMsgType, RecMsgObjType, ExceptionType> IActiveConnectionCommunicationHandler;
+		DEFINE_UNIQUE_PTR(IActiveConnectionCommunicationHandler)
+		typedef std::function<void(IActiveConnectionCommunicationHandler_UPtr)> NewConnectionCallback;
+
 		virtual void start() = 0;
 
-		virtual void registerForNewConnections(std::function<void(IActiveConnection<RecMsgObjType, SendMsgObjType>)>, std::function<void(size_t)>) = 0;
+		virtual void registerForNewConnections(NewConnectionCallback, std::function<void(size_t)>) = 0;
 
-		virtual void unregisterForNewConnections(size_t, std::function<void(bool, std::string)>) = 0;
+		virtual void unregisterForNewConnections(size_t) = 0;
 
-		virtual ~IActiveConnectionServerInterface() {}
-	};
-
-
-	template <class RecMsgObjType, class SendMsgObjType>
-	struct IPassiveConnectionServerInterface
-	{
-		virtual void start() = 0;
-
-		virtual void registerForNewConnections(std::function<void(IPassiveConnection<RecMsgObjType, SendMsgObjType>)>, std::function<void(size_t)>) = 0;
-
-		virtual void unregisterForNewConnections(size_t, std::function<void(bool, std::string)>) = 0;
-
-		virtual ~IPassiveConnectionServerInterface() {}
+		virtual ~IServerInterface() {}
 	};
 }
