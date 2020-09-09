@@ -15,18 +15,14 @@ namespace ULCommunicationFramework
 	};
 
 
-	template <class MsgObjType, class ExceptionType>
-	struct IMsgPropagator
-	{
-		virtual void send(MsgObjType, std::function<void(const ExceptionType&)>) = 0;
-	};
-
 	template <class RecMsgObjType, class SendMsgObjType, class ExceptionType>
-	struct IConnection : IMsgPropagator<SendMsgObjType, ExceptionType>
+	struct IConnection
 	{
 		virtual void receive(std::function<void(RecMsgObjType)>, std::function<void(const ExceptionType&)>) = 0;
 
-		virtual void registerForConnectionEvents(std::function<void(ConnectionEvent, std::string)>, size_t, std::function<void(ExceptionType&)>) = 0;
+		virtual void send(SendMsgObjType, std::function<void(const ExceptionType&)>) = 0;
+
+		virtual void registerForConnectionEvents(std::function<void(ConnectionEvent, std::string)>, size_t, std::function<void(const ExceptionType&)>) = 0;
 
 		virtual void unregisterForConnectionEvents(size_t, std::function<void(const ExceptionType&)>) = 0;
 
